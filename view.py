@@ -18,9 +18,8 @@ def setup():
                        bg='white')
     
     start_button = Button(root, text='Start', width=12)
-    start_button.bind('<Button-1>', start_handler) #Button-1 = left mouse by tkinter event-handler
     clear_button = Button(root, text='Clear', width=12)
-    clear_button.bind('<Button-1>', clear_handler)
+
 
     choice = StringVar(root)
     choice.set('Choose a Pattern')
@@ -29,28 +28,15 @@ def setup():
     'glider gun', 
     'random',
     command=option_handler)
-    
     option.config(width=20)
     
     grid_view.grid(row=0, columnspan=3, padx=20, pady=20)
     grid_view.bind('<Button-1>', grid_handler)
     start_button.grid(row=1, column=0, sticky=W, padx=20, pady=20)
+    start_button.bind('<Button-1>', start_handler) #Button-1 = left mouse by tkinter event-handler
     option.grid(row=1, column=1, padx=20)
     clear_button.grid(row=1, column=2, sticky=E, padx=20, pady=20)
-
-def grid_handler(event):
-    global grid_view, cell_size
-
-    x = int(event.x / cell_size)
-    y = int(event.y / cell_size)
-
-    if (model.grid_model[x][y] == 1):
-        model.grid_model[x][y] = 0
-        draw_cell(x, y, 'white')
-    else:
-        model.grid_model[x][y] = 1
-        draw_cell(x, y, 'black')
-    
+    clear_button.bind('<Button-1>', clear_handler)
 
 def option_handler(event): 
     global is_running, start_button, choice
@@ -63,7 +49,7 @@ def option_handler(event):
     if selection == 'glider':
         model.load_pattern(model.glider_pattern, 10, 10)
     
-    elif selection == 'gun_glider':
+    elif selection == 'glider gun':
         model.load_pattern(model.glider_gun_pattern, 10, 10)
     
     elif selection == 'random':
@@ -92,8 +78,19 @@ def clear_handler(event):
     start_button.configure(text='Start')
     update()
 
+def grid_handler(event):
+    global grid_view, cell_size
 
+    x = int(event.x / cell_size)
+    y = int(event.y / cell_size)
 
+    if (model.grid_model[x][y] == 1):
+        model.grid_model[x][y] = 0
+        draw_cell(x, y, 'white')
+    else:
+        model.grid_model[x][y] = 1
+        draw_cell(x, y, 'black')
+    
 def update():
     global grid_view, root, is_running
 
